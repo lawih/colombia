@@ -26,13 +26,13 @@ class _MyPageState extends State<MyPage> {
   AudioPlayer audioPlayer = AudioPlayer();
   int index = 0;
   List colors = [
-    [Colors.lightBlue, Color(0xFF4FC3F7), Color(0xFFC2B280)],
+    [Colors.cyan, Color(0xFF4FC3F7), Color(0xFFC2B280)],
     [Color(0xFF00283a), Color(0xFF1c698c), Color(0xFF99874f)],
   ];
   List question = [
     "Which continent is Colombia in?",
-    "What's the capital?",
-    "What's the official language?",
+    "What is the capital?",
+    "What is the official language?",
     "Which artist is from Colombia?"
   ];
   List options = [
@@ -49,7 +49,7 @@ class _MyPageState extends State<MyPage> {
 
   _play() async {
     int result = await audioPlayer.play("https://bit.ly/2WQLdcG");
-    if (result == 1) {}
+    if (result != 1) {}
   }
 
   Widget _getBackground() {
@@ -103,7 +103,8 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     _play();
     return Scaffold(
-        body: Stack(children: <Widget>[_getBackground(), _getContent()]));
+      body: Stack(children: <Widget>[_getBackground(), _getContent()]),
+    );
   }
 }
 
@@ -115,7 +116,7 @@ class InfoCard extends StatelessWidget {
 
   InfoCard(this.title, this.options, this.answer, this.img);
 
-  _options() {
+  _getOptions() {
     List<Widget> list = List<Widget>();
     for (var i = 0; i < options.length; i++) {
       list.add(Padding(padding: EdgeInsets.all(5), child: Text(options[i])));
@@ -123,7 +124,7 @@ class InfoCard extends StatelessWidget {
     return list;
   }
 
-  List<Widget> _answer() => <Widget>[
+  List<Widget> _getAnswer() => <Widget>[
         Padding(
           padding: EdgeInsets.all(9),
           child: Text(options[answer], style: TextStyle(fontSize: 30)),
@@ -135,8 +136,8 @@ class InfoCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(40),
       child: FlipCard(
-        front: Content(title, _options(), 'Reveal the answer!', null),
-        back: Content('The answer is:', _answer(), 'Swipe!', img),
+        front: Content(title, _getOptions(), 'Reveal the answer!', null),
+        back: Content('The answer is:', _getAnswer(), 'Swipe!', img),
       ),
     );
   }
