@@ -1,23 +1,19 @@
 # Colombia
 
-A new Flutter project.
+A Flutter project created for the Flutter Create contest.
 
-## Getting Started
+Test your knowledge of the country Colombia with this trivia app.
 
-This project is a starting point for a Flutter application.
+## Requirements
 
-A few resources to get you started if this is your first Flutter project:
+The application was tested on Android with a resolution of 1080x2160 px.
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+The phone must be connected to the internet if you want to hear the sounds of it.
 
 ## Credits
-Photo by Robin Noguier on Unsplash
-Photo by Sebastian Seck on Unsplash
-Photo by Flavia Carpio on Unsplash
+- [Photo by Robin Noguier on Unsplash](https://unsplash.com/photos/CZJp1S4bZos)
+- [Photo by Sebastian Seck on Unsplash](https://unsplash.com/photos/qQ5xOZBv_Ms)
+- [Photo by Flavia Carpio on Unsplash](https://unsplash.com/photos/P3PFi8THbUs)
+- [Photo by Ricardo Gomez Angel on Unsplash](https://unsplash.com/photos/L6T_6Rp2iEk)
 
 
