@@ -23,6 +23,11 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  TextStyle _titleStyle = TextStyle(
+    fontSize: 40,
+    fontWeight: FontWeight.w800,
+    color: Colors.white,
+  );
   AudioPlayer audioPlayer = AudioPlayer();
   int index = 0;
   List colors = [
@@ -33,7 +38,7 @@ class _MyPageState extends State<MyPage> {
     "Which continent is Colombia in?",
     "What is the capital?",
     "What is the official language?",
-    "Which artist is from Colombia?"
+    "Which artist is from here?"
   ];
   List options = [
     ['Africa', 'Asia', 'America'],
@@ -44,17 +49,12 @@ class _MyPageState extends State<MyPage> {
   List answer = [2, 0, 2, 1];
   List img = ['q1', 'q2', 'q3', 'q4'];
 
-  TextStyle _titleStyle =
-      TextStyle(fontSize: 40, fontWeight: FontWeight.w800, color: Colors.white);
-
   _play() async {
-    int result = await audioPlayer.play("https://bit.ly/2WQLdcG");
-    if (result != 1) {}
+    await audioPlayer.play("https://bit.ly/2WQLdcG");
   }
 
-  Widget _getBackground() {
+  Widget _getBack() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Expanded(
           child: AnimatedContainer(
@@ -73,7 +73,7 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
-  Widget _getContent() {
+  Widget _getFront() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -81,20 +81,19 @@ class _MyPageState extends State<MyPage> {
         Padding(
           padding: EdgeInsets.all(9),
           child: Text(
-            'Test your knowledge of this beautiful country',
+            'Test your knowledge of this amazing country',
             style: TextStyle(color: Colors.white),
-            textAlign: TextAlign.center,
           ),
         ),
-        Swiper(
-          onIndexChanged: (int idx) => setState(() => index = idx & 1),
-          itemBuilder: (BuildContext context, int idx) =>
-              InfoCard(question[idx], options[idx], answer[idx], img[idx]),
-          itemCount: question.length,
-          itemWidth: 400,
-          itemHeight: MediaQuery.of(context).size.height * 0.7,
-          layout: SwiperLayout.STACK,
-        ),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.7,
+          child: Swiper(
+            onIndexChanged: (int i) => setState(() => index = i & 1),
+            itemBuilder: (BuildContext context, int i) =>
+                InfoCard(question[i], options[i], answer[i], img[i]),
+            itemCount: img.length,
+          ),
+        )
       ],
     );
   }
@@ -103,7 +102,7 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     _play();
     return Scaffold(
-      body: Stack(children: <Widget>[_getBackground(), _getContent()]),
+      body: Stack(children: <Widget>[_getBack(), _getFront()]),
     );
   }
 }
@@ -118,17 +117,16 @@ class InfoCard extends StatelessWidget {
 
   _getOptions() {
     List<Widget> list = List<Widget>();
-    for (var i = 0; i < options.length; i++) {
-      list.add(Padding(padding: EdgeInsets.all(5), child: Text(options[i])));
+    for (int i = 0; i < options.length; i++) {
+      list.add(Padding(padding: EdgeInsets.all(12), child: Text(options[i])));
     }
     return list;
   }
 
   List<Widget> _getAnswer() => <Widget>[
         Padding(
-          padding: EdgeInsets.all(9),
-          child: Text(options[answer], style: TextStyle(fontSize: 30)),
-        )
+            padding: EdgeInsets.all(40),
+            child: Text(options[answer], style: TextStyle(fontSize: 30)))
       ];
 
   @override
@@ -146,10 +144,33 @@ class InfoCard extends StatelessWidget {
 class Content extends StatelessWidget {
   final String title;
   final List<Widget> list;
-  final String subtitle;
+  final String action;
   final String img;
 
-  Content(this.title, this.list, this.subtitle, this.img);
+  Content(this.title, this.list, this.action, this.img);
+
+  Widget _getTitle() => Padding(
+        padding: EdgeInsets.all(20),
+        child: Text(title,
+            style: TextStyle(fontSize: 20), textAlign: TextAlign.center),
+      );
+
+  Widget _getImg() => Expanded(
+      child: img != null
+          ? Image.asset('assets/$img.jpg')
+          : FlareActor("assets/Bob.flr", animation: "Wave"));
+
+  Widget _getAction() => Container(
+      padding: EdgeInsets.all(20),
+      color: Colors.cyan,
+      child: Text(action, style: TextStyle(color: Colors.white)));
+
+  Widget _toColumn(List<Widget> list) => Column(children: list);
+
+  Widget _getLandscape() => Row(children: [
+        Expanded(child: _toColumn(<Widget>[_getTitle(), _getImg()])),
+        Expanded(child: _toColumn(<Widget>[_toColumn(list), _getAction()]))
+      ]);
 
   @override
   Widget build(BuildContext context) {
@@ -157,28 +178,10 @@ class Content extends StatelessWidget {
       borderRadius: BorderRadius.circular(9),
       child: Container(
         color: Colors.white,
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Text(title,
-                  style: TextStyle(fontSize: 20), textAlign: TextAlign.center),
-            ),
-            Expanded(
-              child: img != null
-                  ? Image.asset('assets/$img.jpg')
-                  : FlareActor("assets/Bob.flr", animation: "Dance"),
-            ),
-            Expanded(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center, children: list),
-            ),
-            Container(
-                padding: EdgeInsets.all(20),
-                color: Colors.grey[300],
-                child: Text(subtitle, style: TextStyle(fontSize: 20))),
-          ],
-        ),
+        child: MediaQuery.of(context).orientation == Orientation.portrait
+            ? _toColumn(
+                <Widget>[_getTitle(), _getImg(), _toColumn(list), _getAction()])
+            : _getLandscape(),
       ),
     );
   }
