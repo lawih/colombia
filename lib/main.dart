@@ -29,7 +29,7 @@ class _MyPageState extends State<MyPage> {
     color: Colors.white,
   );
   AudioPlayer audioPlayer = AudioPlayer();
-  int index = 0;
+  int bgIndex = 0;
   List colors = [
     [Colors.cyan, Color(0xFF4FC3F7), Color(0xFFC2B280)],
     [Color(0xFF00283a), Color(0xFF1c698c), Color(0xFF99874f)],
@@ -53,7 +53,7 @@ class _MyPageState extends State<MyPage> {
     await audioPlayer.play("https://bit.ly/2WQLdcG");
   }
 
-  Widget _getBack() {
+  Widget _getBackground() {
     return Column(
       children: <Widget>[
         Expanded(
@@ -64,7 +64,7 @@ class _MyPageState extends State<MyPage> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: [0, 0.7, 0.8],
-                colors: colors[index],
+                colors: colors[bgIndex],
               ),
             ),
           ),
@@ -83,12 +83,13 @@ class _MyPageState extends State<MyPage> {
           child: Text(
             'Test your knowledge of this amazing country',
             style: TextStyle(color: Colors.white),
+            textAlign: TextAlign.center,
           ),
         ),
         Container(
           height: MediaQuery.of(context).size.height * 0.7,
           child: Swiper(
-            onIndexChanged: (int i) => setState(() => index = i & 1),
+            onIndexChanged: (int i) => setState(() => bgIndex = i % 2),
             itemBuilder: (BuildContext context, int i) =>
                 InfoCard(question[i], options[i], answer[i], img[i]),
             itemCount: img.length,
@@ -102,7 +103,7 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     _play();
     return Scaffold(
-      body: Stack(children: <Widget>[_getBack(), _getFront()]),
+      body: Stack(children: <Widget>[_getBackground(), _getFront()]),
     );
   }
 }
@@ -115,19 +116,10 @@ class InfoCard extends StatelessWidget {
 
   InfoCard(this.title, this.options, this.answer, this.img);
 
-  _getOptions() {
-    List<Widget> list = List<Widget>();
-    for (int i = 0; i < options.length; i++) {
-      list.add(Padding(padding: EdgeInsets.all(12), child: Text(options[i])));
-    }
-    return list;
-  }
+  List<Widget> _getOptions() => options.map((item) => Text(item)).toList();
 
-  List<Widget> _getAnswer() => <Widget>[
-        Padding(
-            padding: EdgeInsets.all(40),
-            child: Text(options[answer], style: TextStyle(fontSize: 30)))
-      ];
+  List<Widget> _getAnswer() =>
+      [Text(options[answer], style: TextStyle(fontSize: 30))];
 
   @override
   Widget build(BuildContext context) {
@@ -150,10 +142,9 @@ class Content extends StatelessWidget {
   Content(this.title, this.list, this.action, this.img);
 
   Widget _getTitle() => Padding(
-        padding: EdgeInsets.all(20),
-        child: Text(title,
-            style: TextStyle(fontSize: 20), textAlign: TextAlign.center),
-      );
+      padding: EdgeInsets.all(20),
+      child: Text(title,
+          style: TextStyle(fontSize: 20), textAlign: TextAlign.center));
 
   Widget _getImg() => Expanded(
       child: img != null
@@ -165,22 +156,31 @@ class Content extends StatelessWidget {
       color: Colors.cyan,
       child: Text(action, style: TextStyle(color: Colors.white)));
 
-  Widget _toColumn(List<Widget> list) => Column(children: list);
+  Widget _toColumn(List<Widget> list) =>
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: list);
 
   Widget _getLandscape() => Row(children: [
         Expanded(child: _toColumn(<Widget>[_getTitle(), _getImg()])),
-        Expanded(child: _toColumn(<Widget>[_toColumn(list), _getAction()]))
+        Expanded(
+            child: _toColumn(
+                <Widget>[Expanded(child: _toColumn(list)), _getAction()]))
+      ]);
+
+  Widget _getPortrait() => _toColumn(<Widget>[
+        _getTitle(),
+        _getImg(),
+        Expanded(child: _toColumn(list)),
+        _getAction()
       ]);
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(9),
+      borderRadius: BorderRadius.circular(15),
       child: Container(
         color: Colors.white,
         child: MediaQuery.of(context).orientation == Orientation.portrait
-            ? _toColumn(
-                <Widget>[_getTitle(), _getImg(), _toColumn(list), _getAction()])
+            ? _getPortrait()
             : _getLandscape(),
       ),
     );

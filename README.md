@@ -4,6 +4,9 @@ A Flutter project created for the Flutter Create contest.
 
 Test your knowledge of the country Colombia with this trivia app.
 
+## Use
+You can use it in landscape mode and in portrait mode.
+
 ## Requirements
 
 The application was tested on Android with a resolution of 1080x2160 px.
