@@ -20,6 +20,7 @@ dependencies:
   flip_card: ^0.2.1
   snaplist: ^0.1.8
   audioplayers: ^0.10.1
+  flutter_launcher_icons: ^0.7.2+1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -29,6 +30,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: "launcher_icon" 
+  ios: true
+  image_path: "assets/col_flutter.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
